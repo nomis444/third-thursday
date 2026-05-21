@@ -4,29 +4,33 @@ import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
 import type { Attendee } from "@/lib/types";
 
-function getCurrentEventDate(): string {
+function getThirdThursday(y: number, m: number): Date {
+  const first = new Date(y, m, 1);
+  const dayOfWeek = first.getDay();
+  const firstThursday = dayOfWeek <= 4 ? 5 - dayOfWeek : 12 - dayOfWeek;
+  return new Date(y, m, firstThursday + 14);
+}
+
+function getVisibleEventDate(): string | null {
   const now = new Date();
-  let year = now.getFullYear();
-  let month = now.getMonth();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  function getThirdThursday(y: number, m: number): Date {
-    const first = new Date(y, m, 1);
-    const dayOfWeek = first.getDay();
-    const firstThursday = dayOfWeek <= 4 ? 5 - dayOfWeek : 12 - dayOfWeek;
-    return new Date(y, m, firstThursday + 14);
+  let eventDate = getThirdThursday(now.getFullYear(), now.getMonth());
+
+  if (eventDate > today) {
+    let m = now.getMonth() - 1;
+    let y = now.getFullYear();
+    if (m < 0) { m = 11; y--; }
+    eventDate = getThirdThursday(y, m);
   }
 
-  let eventDate = getThirdThursday(year, month);
-  if (now > new Date(eventDate.getTime() + 24 * 60 * 60 * 1000)) {
-    month++;
-    if (month > 11) {
-      month = 0;
-      year++;
-    }
-    eventDate = getThirdThursday(year, month);
+  const diffDays = (today.getTime() - eventDate.getTime()) / (1000 * 60 * 60 * 24);
+
+  if (diffDays >= 0 && diffDays <= 3) {
+    return eventDate.toISOString().split("T")[0];
   }
 
-  return eventDate.toISOString().split("T")[0];
+  return null;
 }
 
 function formatEventDate(dateStr: string): string {
@@ -44,9 +48,14 @@ export default function DirectoryList() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  const eventDate = getCurrentEventDate();
+  const eventDate = getVisibleEventDate();
 
   useEffect(() => {
+    if (!eventDate) {
+      setLoading(false);
+      return;
+    }
+
     const sb = getSupabase();
 
     async function fetchAttendees() {
@@ -96,6 +105,19 @@ export default function DirectoryList() {
     return (
       <div className="flex justify-center py-16">
         <div className="w-8 h-8 border-2 border-gold-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!eventDate) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-slate-text text-lg mb-2">
+          The attendee directory is available during and for 3 days after each event.
+        </p>
+        <p className="text-slate-muted text-sm">
+          See you at the next Third Thursday!
+        </p>
       </div>
     );
   }
