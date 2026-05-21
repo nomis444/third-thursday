@@ -21,17 +21,15 @@ export default function Home() {
           </p>
         </div>
 
+        <a
+          href="/directory"
+          className="block w-full bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold py-4 px-6 rounded-xl text-center text-lg transition-colors mb-6"
+        >
+          View Tonight&apos;s Attendee Directory &rarr;
+        </a>
+
         <div className="bg-navy-800 rounded-2xl p-6 sm:p-8 border border-navy-600">
           <RegistrationForm />
-        </div>
-
-        <div className="mt-6 text-center">
-          <a
-            href="/directory"
-            className="text-gold-400 hover:text-gold-500 text-sm font-medium transition-colors"
-          >
-            View Tonight&apos;s Attendee Directory &rarr;
-          </a>
         </div>
       </div>
     </main>
