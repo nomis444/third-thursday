@@ -21,6 +21,16 @@ export default function DirectoryPage() {
               <p className="text-slate-text text-sm">
                 Connect with everyone at tonight&apos;s event
               </p>
+              <div className="flex items-center gap-1.5 mt-1 opacity-70">
+                <span className="text-slate-muted text-xs">powered by</span>
+                <Image
+                  src="/midpoint-logo.png"
+                  alt="Midpoint AI"
+                  width={70}
+                  height={22}
+                  className="inline-block"
+                />
+              </div>
             </div>
           </div>
           <a

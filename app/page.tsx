@@ -23,10 +23,21 @@ export default function Home() {
 
         <a
           href="/directory"
-          className="block w-full bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold py-4 px-6 rounded-xl text-center text-lg transition-colors mb-6"
+          className="block w-full bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold py-4 px-6 rounded-xl text-center text-lg transition-colors mb-3"
         >
           View Tonight&apos;s Attendee Directory &rarr;
         </a>
+
+        <div className="flex items-center justify-center gap-1.5 mb-6 opacity-70">
+          <span className="text-slate-muted text-xs">powered by</span>
+          <Image
+            src="/midpoint-logo.png"
+            alt="Midpoint AI"
+            width={80}
+            height={25}
+            className="inline-block"
+          />
+        </div>
 
         <div className="bg-navy-800 rounded-2xl p-6 sm:p-8 border border-navy-600">
           <RegistrationForm />
